@@ -1,0 +1,12 @@
+# Documents
+*.docx
+*.doc
+
+# Logs
+*.log
+
+# Images
+*.jpg
+*.jpeg
+*.png
+*.gif
