@@ -1,26 +1,23 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import time
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support import expected_conditions as EC
 
-from pagemethods.customergroups import get_name, get_parent, count_customers
+from pagemethods.loginorg import login
+
+import names
+import random
 
 driver = webdriver.Chrome()
  
-## Login
-driver.get("https://cinq.repairq.io/login")
-elem = driver.find_element_by_id("UserLoginForm_username")
-elem.send_keys("felipe")
-elem = driver.find_element_by_id("UserLoginForm_password")
-elem.send_keys("felipe")
-elem.send_keys(Keys.RETURN)
+## Try to Login with the new user ##
+# driver.get('http://localhost:3000/portal/org-test-parent/login')
 
-## Navigate to the customer groups page
-driver.get("https://cinq.repairq.io/customerGroups")
+ # Wait for the page to load
+# wait = WebDriverWait(driver, 10)
+# elem = wait.until(EC.element_to_be_clickable((By.ID, 'username')))
 
-## Print the total number of customers on every page
-customers = driver.find_elements_by_class_name("largest-row")
-print('Total Customers:', count_customers(driver))
-
-## Get customer name
-# customer_name = get_name(customers[0])
-# print(customer_name)
+login(driver,'org-test-parent', 'elizabeth9936', 'Testing*123', 1)

@@ -5,8 +5,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
+
 import names
 import random
+
+from pagemethods.loginorg import login
 
 driver = webdriver.Chrome()
 driver.get("https://cinq.repairq.io/site/login")
@@ -69,8 +72,8 @@ elem = driver.find_element_by_id("UserForm_" + id_1 + "_role_portal_admin")
 elem.click()
 
 ## Mark some roules for the Child customer group ##
-elem = driver.find_element_by_id("UserForm_" + id_2 + "_role_portal_user")
-elem.click()
+# elem = driver.find_element_by_id("UserForm_" + id_2 + "_role_portal_user")
+# elem.click()
 elem = driver.find_element_by_id("UserForm_" + id_2 + "_role_portal_admin")
 elem.click()
 elem = driver.find_element_by_id("UserForm_" + id_2 + "_role_portal_service_manager")
@@ -83,33 +86,11 @@ btn.click()
 
 print(username)
 print(lastname)
+print(password)
 
-## Try to Login with the new user ##
-driver.get('http://localhost:3000/portal/org-test-parent/login')
+assert login(driver,'org-test-parent', username, password, 1)
+assert not login(driver,'org-test-parent', username, password, 2)
 
- # Wait for the page to load
-wait = WebDriverWait(driver, 10)
-elem = wait.until(EC.element_to_be_clickable((By.ID, 'username')))
-
- # Fill the login fields
-elem = driver.find_element_by_id("username")
-elem.send_keys(username)
-elem = driver.find_element_by_id("password")
-elem.send_keys(password)
-
-# Try to log in an unregistered group
-select = Select(driver.find_element_by_id("group"))
-select.select_by_index(1) 
-btn = driver.find_element_by_xpath("//button[text()='Log in']")
-btn.click()
-
-# elem = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'username')))
-try:
-    error = driver.find_element_by_class_name('login-error-ywrapper')
-except NoSuchElementException:
-    print('Success')
-else:
-    print('Error Page')
 
 # driver.quit()
 # selenium.common.exceptions

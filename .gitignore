@@ -1,3 +1,6 @@
+# Directories
+__pycache__/
+
 # Documents
 *.docx
 *.doc

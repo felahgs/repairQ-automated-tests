@@ -3,6 +3,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from colorama import init, deinit, Fore, Style
 
+from pagemethods.loginrepairq import login
 from pagemethods.customergroups import (get_name, 
                                         get_parent,
                                         count_children,
@@ -18,18 +19,11 @@ import sys
 # Driver Start up
 driver = webdriver.Chrome()
 
-## Login
-driver.get("https://cinq.repairq.io/")
-elem = driver.find_element_by_id("UserLoginForm_username")
-elem.send_keys("felipe")
-elem = driver.find_element_by_id("UserLoginForm_password")
-elem.send_keys("felipe")
-elem.send_keys(Keys.RETURN)
+## RepairQ login
+login(driver,"felipe","felipe")
 
 # Navigate to the customer groups page
 driver.get("https://cinq.repairq.io/customerGroups")
-
-# customers = driver.find_elements_by_class_name("largest-row")
 
 # For each page, check the number of child for every customer
 while True:
@@ -40,8 +34,6 @@ while True:
     customer_page = driver.current_url
 
     for i in range(0, customers_total):
-    # for i in range(0, 1):
-        # i = 12
 
         # Fetch the costumers list
         customers = driver.find_elements_by_class_name("largest-row")
