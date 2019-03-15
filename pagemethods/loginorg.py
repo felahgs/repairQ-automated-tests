@@ -42,7 +42,7 @@ def login(driver, org, username, password, group_index):
     elem = driver.find_element_by_id("password")
     elem.send_keys(password)
 
-    # Try to log in an unregistered group
+    # Try to log in 
     select = Select(driver.find_element_by_id("group"))
     select.select_by_index(group_index) 
     btn = driver.find_element_by_xpath("//button[text()='Log in']")

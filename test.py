@@ -1,23 +1,24 @@
+import unittest
+from pageobjects.portal import login
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support.ui import Select
-from selenium.webdriver.support import expected_conditions as EC
 
-from pagemethods.loginorg import login
 
-import names
-import random
+class Test(unittest.TestCase):
+    def setUp(self):
+        self.driver = webdriver.Chrome()
+        self.driver.get("http://localhost:3000/portal/org-test-parent/login")
 
-driver = webdriver.Chrome()
- 
-## Try to Login with the new user ##
-# driver.get('http://localhost:3000/portal/org-test-parent/login')
+    
+    def test_login(self):
+        login_page = login.LoginPage(self.driver, 'org-test-parent')
+        # login_page.send_username('felipe')
+        # login_page.send_password('Testing*123')
+        # login_page.select_group(2)
+        self.assertTrue(login_page.try_to_login('felipe', 'Test', 2))
 
- # Wait for the page to load
-# wait = WebDriverWait(driver, 10)
-# elem = wait.until(EC.element_to_be_clickable((By.ID, 'username')))
+    # def tearDown(self):
+    #     self.driver.close()
 
-login(driver,'org-test-parent', 'elizabeth9936', 'Testing*123', 1)
+if __name__ == "__main__":
+    unittest.main()
+
