@@ -20,7 +20,7 @@ class Test(unittest.TestCase):
     # def test_login_not_allowed_group(self):
 
     def tearDown(self):
-        self.driver.close()
+        self.driver.quit()
 
 if __name__ == "__main__":
     unittest.main()

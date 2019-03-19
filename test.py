@@ -1,20 +1,36 @@
-import unittest
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
 
-class TestStringMethods(unittest.TestCase):
+driver = webdriver.Chrome()
+driver.get("https://cinq.repairq.io/")
 
-    def test_upper(self):
-        self.assertEqual('foo'.upper(), 'FOO')
 
-    def test_isupper(self):
-        self.assertTrue('FOO'.isupper())
-        self.assertFalse('Foo'.isupper())
+elem = driver.find_element_by_id("UserLoginForm_username")
+elem.send_keys("pedro")
 
-    def test_split(self):
-        s = 'hello world'
-        self.assertEqual(s.split(), ['hello', 'world'])
-        # check that s.split fails when the separator is not a string
-        with self.assertRaises(TypeError):
-            s.split(2)
+elem = driver.find_element_by_id("UserLoginForm_password")
+elem.send_keys("pedro")
+elem.send_keys(Keys.RETURN)
 
-if __name__ == '__main__':
-    unittest.main()
+driver.get("https://cinq.repairq.io/customerGroups")
+# count = len(driver.find_elements_by_class_name("largest-row"))
+
+count=5
+while count < 23:
+
+    driver.get("https://cinq.repairq.io/customerGroups/add")
+
+    elem = driver.find_element_by_id("CustomerGroup_name")
+    elem.send_keys("Org Test Child " + str(count))
+
+    elem = driver.find_element_by_id("CustomerGroup_description")
+    elem.send_keys("This is description for School number " + str(count) + ", added for testing.")
+
+    select = Select(driver.find_element_by_id("CustomerGroup_parent_id"))
+    select.select_by_index(22)
+
+    elem = driver.find_element_by_id("save-button")
+    elem.click()
+
+    count += 1

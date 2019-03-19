@@ -14,16 +14,17 @@ class LoginPage(BasePage):
     LOCATION_SEL = (By.XPATH, '//*[@id="UserLoginForm_currentLocation"]')
     LOGIN_BTN = (By.XPATH,'//*[@id="yw0"]/fieldset/div[4]/div[2]/button')
     LOGIN_ERROR = (By.CLASS_NAME, "login-error-wrapper")
+    URL = 'https://cinq.repairq.io/site/login'
 
     def __init__(self, driver):
         self.driver = driver
-        self.URL = 'https://cinq.repairq.io/site/login'
-        self.wait = WebDriverWait(driver, 4)
+        # self.URL = 'https://cinq.repairq.io/site/login'
+        self.wait = WebDriverWait(driver, 10)
+        LoginPage.navigate_to_page(self)
         self.wait.until(EC.presence_of_element_located(LoginPage.LOGIN_SCREEN))
 
-
     def navigate_to_page(self):
-        self.driver.get(self.URL)
+        self.driver.get(LoginPage.URL)
         self.wait.until(EC.presence_of_element_located(LoginPage.LOGIN_SCREEN))
 
     def send_username(self, username: str):
@@ -39,7 +40,7 @@ class LoginPage(BasePage):
         select.select_by_index(location_index)
 
 
-    def try_to_login (self, username: str, password: str, location_index: int):
+    def try_to_login (self, username: str, password: str, location_index: int = 1):
         """
             Login to the repairQ page
 
