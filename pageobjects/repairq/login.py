@@ -27,11 +27,11 @@ class LoginPage(BasePage):
         self.driver.get(LoginPage.URL)
         self.wait.until(EC.presence_of_element_located(LoginPage.LOGIN_SCREEN))
 
-    def send_username(self, username: str):
+    def set_username(self, username: str):
         elem = self.driver.find_element(*LoginPage.USER_NAME)
         elem.send_keys(username)
 
-    def send_password(self, password: str):
+    def set_password(self, password: str):
         elem = self.driver.find_element(*LoginPage.PASSWORD)
         elem.send_keys(password)
 
@@ -52,8 +52,8 @@ class LoginPage(BasePage):
             Returns:
                 True if login is successfull and False otherwise
         """
-        LoginPage.send_username(self, username)
-        LoginPage.send_password(self, password)
+        LoginPage.set_username(self, username)
+        LoginPage.set_password(self, password)
         LoginPage.select_location(self, location_index)
         btn = self.driver.find_element(*LoginPage.LOGIN_BTN)
         btn.click()
