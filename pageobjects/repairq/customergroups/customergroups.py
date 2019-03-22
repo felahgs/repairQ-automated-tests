@@ -30,7 +30,35 @@ class CustomerGroupsPage(BasePage):
     def get_page_customers(self):
         return self.driver.find_elements(*CustomerGroupsPage.CUSTOMER_GROUP)
 
+    def search_for_customer(self, name):
+        customers_list = self.get_customers()
+        return next((customer for customer in customers_list if customer.get('name') == name), {'name': None, 'parent':None })
 
+    def get_customers(self):
+        """
+            Get element name from Customer Group list
+
+            Args:
+                element: Customer element from the customer group list.
+
+            Returns:
+                innerHTML from the name tag of the selected elemenet
+        """
+        self.navigate_to_page()
+        customer_list=[]
+        while True:
+            page_customer = [{
+                'name': self.get_name(customer), 
+                'parent':self.get_parent(customer),
+                'active':self.get_active(customer)
+            } for customer in self.get_page_customers()]
+
+            customer_list = page_customer + customer_list
+            if not CustomerGroupsPage.have_next_page(self):
+                break
+        self.navigate_to_page()
+        return customer_list
+    
     def get_name(self, element):
         """
             Get element name from Customer Group list
@@ -41,6 +69,7 @@ class CustomerGroupsPage(BasePage):
             Returns:
                 innerHTML from the name tag of the selected elemenet
         """
+        self.get_details_button(element)
         return element.find_elements_by_class_name("wrap-text")[0].get_attribute("innerHTML").strip()
 
     def get_parent(self, element):
@@ -54,6 +83,12 @@ class CustomerGroupsPage(BasePage):
                 innerHTML from the parent tag of the selected elemenet
         """
         return element.find_elements_by_class_name("wrap-text")[2].get_attribute("innerHTML").strip()
+
+    def get_active(self, element):
+        return element.find_elements_by_class_name("wrap-text")[1].get_attribute("innerHTML").strip()
+
+    def get_details_button(self, element):
+        pass
 
     def click_cgroup_details(self, element):
         button = element.find_element(*CustomerGroupsPage.CGROUP_DETAILS_BTN)
@@ -95,14 +130,28 @@ class CustomerGroupsPage(BasePage):
 
             Usage: count = count_customers(driver)
         """
+        self.navigate_to_page()
         count = 0
         while True: 
             count += len(self.driver.find_elements(*CustomerGroupsPage.CUSTOMER_GROUP))
             if not CustomerGroupsPage.have_next_page(self):
                 break
         return count
+
+    def count_children(self, element_name, customers):
+        count = 0
+        # customers = self.get_customers()
+        # childlist = []
+        childlist = [customer for customer in customers if customer.get('parent') == element_name]
+        count = len(childlist)
+        # print(childlist)
+        # print(count)
+        # Call the function recursively for each child of the 
+        for child in childlist:
+            count = count + CustomerGroupsPage.count_children(self, child.get('name'), customers)
+        return count
     
-    def count_children(self, element_name):
+    def count_children_old(self, element_name):
         """
             Count of every child and descendents from the Customer Groups page
             

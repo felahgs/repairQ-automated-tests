@@ -44,13 +44,21 @@ class AddGroup(BasePage):
         index = 0 if state is True else 1
         select.select_by_index(index)
 
-    def select_location(self, index: int):
+    def select_location_by_index(self, index: int):
         select = Select(self.driver.find_element(*AddGroup.LOCATION_SEL))
         select.select_by_index(index)
 
-    def select_parent(self, index: int):
+    def select_location_by_text(self, location: str):
+        select = Select(self.driver.find_element(*AddGroup.LOCATION_SEL))
+        select.select_by_visible_text(location)
+
+    def select_parent_by_index(self, index: int):
         select = Select(self.driver.find_element(*AddGroup.PARENT_SEL))
         select.select_by_index(index)
+
+    def select_parent_by_text(self, parent: str):
+        select = Select(self.driver.find_element(*AddGroup.PARENT_SEL))
+        select.select_by_visible_text(parent)
 
     def save_group(self):
         btn = self.driver.find_element(*AddGroup.SAVE_BTN)

@@ -14,19 +14,31 @@ class Test(unittest.TestCase):
         login_page.try_to_login('felipe', 'felipe', 0)
         self.driver.get("https://cinq.repairq.io/customerGroups")
 
+    # def test_child(self):
+    #     self.driver.get("https://cinq.repairq.io/customerGroups")
+    #     # count = len(driver.find_elements_by_class_name("largest-row"))
+
+    #     page = customergroups.CustomerGroupsPage(self.driver)
+    #     customers = page.get_customers()
+    #     customer = page.search_for_customer('Bend Public Schools')
+    #     print(customer)
+    #     count = page.count_children('Bend Public Schools', customers)
+    #     print(count)
+
+
     def test_count_all_children(self):
         groups_page = customergroups.CustomerGroupsPage(self.driver)
+        customers_list = groups_page.get_customers()
         while True:
         # Identify quantity of Customer on the Costumers Group Page
             customers_total = len(self.driver.find_elements_by_class_name("largest-row"))
 
             # Save page current URL
             initial_page = self.driver.current_url
-
             for i in range(0, customers_total):
             # for i in range(0, 3):
 
-                # Fetch the costumers list
+                # Fetch the costumers elements list from current page
                 customers = groups_page.get_page_customers()
 
                 # Assign customer index 
@@ -37,10 +49,7 @@ class Test(unittest.TestCase):
                 initial_page = self.driver.current_url
                 
                 # Identify number of children (recursively for each children) for the given element
-                children_total = groups_page.count_children(customer_name)
-
-                # Clicking costumer details buttom
-                customers = groups_page.get_page_customers()
+                children_total = groups_page.count_children(customer_name, customers_list)
 
                 # Clicking subgroups buttom
                 group_details = groups_page.navigate_to_group_details(customers[customer_num])

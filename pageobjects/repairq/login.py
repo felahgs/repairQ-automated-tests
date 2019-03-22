@@ -35,7 +35,7 @@ class LoginPage(BasePage):
         elem = self.driver.find_element(*LoginPage.PASSWORD)
         elem.send_keys(password)
 
-    def select_location(self, location_index: int):
+    def select_location_by_index(self, location_index: int):
         select = Select(self.driver.find_element(*LoginPage.LOCATION_SEL))
         select.select_by_index(location_index)
 
@@ -54,7 +54,7 @@ class LoginPage(BasePage):
         """
         LoginPage.set_username(self, username)
         LoginPage.set_password(self, password)
-        LoginPage.select_location(self, location_index)
+        LoginPage.select_location_by_index(self, location_index)
         btn = self.driver.find_element(*LoginPage.LOGIN_BTN)
         btn.click()
 
