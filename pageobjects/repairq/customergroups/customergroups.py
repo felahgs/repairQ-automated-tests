@@ -50,9 +50,9 @@ class CustomerGroupsPage(BasePage):
             page_customer = [{
                 'name': self.get_name(customer), 
                 'parent':self.get_parent(customer),
-                'active':self.get_active(customer)
+                'active':self.get_active(customer),
+                'link':self.get_details_link(customer)
             } for customer in self.get_page_customers()]
-
             customer_list = page_customer + customer_list
             if not CustomerGroupsPage.have_next_page(self):
                 break
@@ -69,7 +69,6 @@ class CustomerGroupsPage(BasePage):
             Returns:
                 innerHTML from the name tag of the selected elemenet
         """
-        self.get_details_button(element)
         return element.find_elements_by_class_name("wrap-text")[0].get_attribute("innerHTML").strip()
 
     def get_parent(self, element):
@@ -87,15 +86,16 @@ class CustomerGroupsPage(BasePage):
     def get_active(self, element):
         return element.find_elements_by_class_name("wrap-text")[1].get_attribute("innerHTML").strip()
 
-    def get_details_button(self, element):
-        pass
+    def get_details_link(self, element):
+        tag = element.find_elements_by_class_name("btn-action")[0]
+        return tag.get_attribute("href")
 
     def click_cgroup_details(self, element):
         button = element.find_element(*CustomerGroupsPage.CGROUP_DETAILS_BTN)
         button.click()
 
-    def navigate_to_group_details(self, element) -> groupdetails.GroupDetailsPage:
-        self.click_cgroup_details(element)
+    def navigate_to_group_details(self, link) -> groupdetails.GroupDetailsPage:
+        self.driver.get(link)
         group_details = groupdetails.GroupDetailsPage(self.driver)
         return group_details
 
@@ -140,53 +140,10 @@ class CustomerGroupsPage(BasePage):
 
     def count_children(self, element_name, customers):
         count = 0
-        # customers = self.get_customers()
-        # childlist = []
         childlist = [customer for customer in customers if customer.get('parent') == element_name]
         count = len(childlist)
-        # print(childlist)
-        # print(count)
-        # Call the function recursively for each child of the 
+        # Call the function recursively for each child in the list (Customer group childs and descendents)
         for child in childlist:
             count = count + CustomerGroupsPage.count_children(self, child.get('name'), customers)
         return count
     
-    def count_children_old(self, element_name):
-        """
-            Count of every child and descendents from the Customer Groups page
-            
-            Args:
-                driver: Reference to the browser driver
-                element_name: String with the Customer 
-
-            Returns:
-                Total of elements counted from every page
-
-            Usage: count = count_children(driver, 'Main School')
-        """
-        count = 0
-        childlist = []
-        customer_page = self.driver.current_url
-        self.driver.get("https://cinq.repairq.io/customerGroups")
-
-        # Check for every customer on all pages if they are children of the 
-        #   selected element
-        while True: 
-            customers = self.driver.find_elements_by_class_name("largest-row")
-            for member in customers:
-                if( element_name == CustomerGroupsPage.get_parent(self, member)):
-                    count += 1
-                    childlist.append(CustomerGroupsPage.get_name(self, member))
-            # Continue checking in all pages for children
-            if not CustomerGroupsPage.have_next_page(self):
-                break
-
-        # Call the function recursively for each child of the 
-        for child in childlist:
-            count = count + CustomerGroupsPage.count_children(self, child)
-
-        # Return to the original page where the function was called
-        self.driver.get(customer_page)
-        return count
-
-## Check if there is a next page. Return true if the 'next' button is enable ##
