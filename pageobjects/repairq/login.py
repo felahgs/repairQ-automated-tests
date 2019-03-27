@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
+from pageobjects import root_url
 from pageobjects.basepage import BasePage
 
 class LoginPage(BasePage):
@@ -14,7 +15,7 @@ class LoginPage(BasePage):
     LOCATION_SEL = (By.XPATH, '//*[@id="UserLoginForm_currentLocation"]')
     LOGIN_BTN = (By.XPATH,'//*[@id="yw0"]/fieldset/div[4]/div[2]/button')
     LOGIN_ERROR = (By.CLASS_NAME, "login-error-wrapper")
-    URL = 'https://cinq.repairq.io/site/login'
+    URL = root_url.repairq +"/site/login"
 
     def __init__(self, driver):
         self.driver = driver

@@ -6,6 +6,7 @@ from selenium import webdriver
 from pageobjects.repairq import login
 from pageobjects.repairq.customergroups import addgroup
 from pageobjects.repairq.customergroups import customergroups
+from pageobjects import root_url
 
 
 class Test(unittest.TestCase):
@@ -14,7 +15,7 @@ class Test(unittest.TestCase):
         login_page = login.LoginPage(self.driver)
         login_page.navigate_to_page()
         login_page.try_to_login('felipe', 'felipe', 0)
-        self.driver.get("https://cinq.repairq.io/customerGroups/add")
+        self.driver.get( root_url.repairq + "/customerGroups/add")
 
     def test_add_parent_group(self):
         customer_groups_page = customergroups.CustomerGroupsPage(self.driver)
@@ -37,7 +38,7 @@ class Test(unittest.TestCase):
     def test_add_child_group(self):
         customer_groups_page = customergroups.CustomerGroupsPage(self.driver)
         customer_groups_page.navigate_to_page()
-        count = customer_groups_page.count_customers() + 1
+        count = len(customer_groups_page.get_customers()) + 1
 
         add_page = addgroup.AddGroup(self.driver)
         add_page.navigate_to_page()

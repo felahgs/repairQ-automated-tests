@@ -3,14 +3,15 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
-import time
 
+from pageobjects import root_url
 from pageobjects.basepage import BasePage
 from pageobjects.repairq.customergroups import groupdetails
 
+import time
 
 class AddUser(BasePage):
-    URL = "https://cinq.repairq.io/customerGroupUsers/add"
+    URL = root_url.repairq + "/customerGroupUsers/add"
     FIRST_NAME = (By.ID, "CustomerGroupUserForm_first_name")
     LAST_NAME = (By.ID, "CustomerGroupUserForm_last_name")
     EMAIL = (By.ID, "CustomerGroupUserForm_email")

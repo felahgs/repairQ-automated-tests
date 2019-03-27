@@ -1,12 +1,15 @@
 import unittest
+
 from pageobjects.portal import login
+from pageobjects import root_url
+
 from selenium import webdriver
 
 
 class Test(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Chrome()
-        self.driver.get("http://localhost:3000/portal/org-test-parent/login")
+        self.driver.get(root_url.portal + "/org-test-parent/login")
 
     def test_login_allowed_group(self):
         login_page = login.LoginPage(self.driver, 'org-test-parent')

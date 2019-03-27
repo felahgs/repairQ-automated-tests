@@ -3,14 +3,16 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
-import time
 
+from pageobjects import root_url
 from pageobjects.basepage import BasePage
 from pageobjects.repairq.customergroups import groupdetails
 
+import time
+
 
 class AddGroup(BasePage):
-    URL = "https://cinq.repairq.io/customerGroups/add"
+    URL = root_url.repairq + "/customerGroups/add"
     MENU = (By.CLASS_NAME, "left-menu-content")
     NAME_IN = (By.ID, 'CustomerGroup_name')
     DESCRIPTION_IN = (By.ID, 'CustomerGroup_description')

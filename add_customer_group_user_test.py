@@ -7,6 +7,7 @@ from selenium import webdriver
 
 from pageobjects.repairq import login
 from pageobjects.repairq.customergroups import adduser
+from pageobjects import root_url
 
 
 class Test(unittest.TestCase):
@@ -15,7 +16,7 @@ class Test(unittest.TestCase):
         login_page = login.LoginPage(self.driver)
         login_page.navigate_to_page()
         login_page.try_to_login('felipe', 'felipe', 0)
-        self.driver.get("https://cinq.repairq.io/customerGroupUsers/add")
+        self.driver.get(root_url.repairq + "/customerGroupUsers/add")
 
     def test_add_user(self):
         name = names.get_first_name()
@@ -24,7 +25,6 @@ class Test(unittest.TestCase):
         email = str.lower(name) + "@" + str.lower(lastname) + ".com"
         phone = random.randint(10000,999999999999)
         password = "Testing*123"
-
 
         add_page = adduser.AddUser(self.driver)
         add_page.set_first_name(name)
@@ -49,7 +49,7 @@ class Test(unittest.TestCase):
         add_page.set_role_member_manager(4)
         add_page.set_role_service_manager(5)
         add_page.set_role_service_manager(6)
-        add_page.save_contact()
+        # add_page.save_contact()
 
     def tearDown(self):
         time.sleep(20)

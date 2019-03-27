@@ -3,6 +3,7 @@ import unittest
 from colorama import init, deinit, Fore, Style
 from selenium import webdriver
 
+from pageobjects import root_url
 from pageobjects.repairq.customergroups import customergroups
 from pageobjects.repairq import login
 
@@ -12,7 +13,7 @@ class Test(unittest.TestCase):
         login_page = login.LoginPage(self.driver)
         login_page.navigate_to_page()
         login_page.try_to_login('felipe', 'felipe', 0)
-        self.driver.get("https://cinq.repairq.io/customerGroups")
+        self.driver.get(root_url.repairq + "/customerGroups")
 
     def test_count_all_children(self):
         groups_page = customergroups.CustomerGroupsPage(self.driver)

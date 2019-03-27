@@ -1,12 +1,15 @@
 import unittest
+
 from pageobjects.repairq import login
+from pageobjects import root_url
+
 from selenium import webdriver
 
 
 class Test(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Chrome()
-        self.driver.get("https://cinq.repairq.io/site/login")
+        self.driver.get(root_url.repairq + "/site/login")
 
     def test_login_registered(self):
         login_page = login.LoginPage(self.driver)

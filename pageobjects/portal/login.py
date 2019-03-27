@@ -4,6 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
+from pageobjects import root_url
 
 from pageobjects.basepage import BasePage
 
@@ -13,11 +14,12 @@ class LoginPage(BasePage):
     GROUP = (By.ID, 'group')
     LOGIN_BTN = (By.XPATH,"//button[text()='Log in']")
     LOGIN_ERROR = (By.CLASS_NAME, "login-error-wrapper")
+    LOADING_SPINNER = (By.CLASS_NAME, "rq-loading-spinner")
 
     def __init__(self, driver, org):
         self.driver = driver
         self.org = org
-        self.URL = 'http://localhost:3000/portal/' + self.org + '/login'
+        self.URL = root_url.portal + self.org + '/login'
         self.wait = WebDriverWait(driver, 10)
         self.wait.until(EC.element_to_be_clickable(LoginPage.USER_NAME))
 
@@ -58,9 +60,9 @@ class LoginPage(BasePage):
         btn.click()
 
         # Wait to check if the login is successfull
-        self.wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'loader-wrapper')))
+        self.wait.until(EC.presence_of_element_located((LoginPage.LOADING_SPINNER)))
         # loading is visible
-        self.wait.until(EC.invisibility_of_element((By.CLASS_NAME, 'loader-wrapper')))
+        self.wait.until(EC.invisibility_of_element((LoginPage.LOADING_SPINNER)))
         # loading is NOT visible
 
         try:

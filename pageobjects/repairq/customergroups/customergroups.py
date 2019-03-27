@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 
+from pageobjects import root_url
 from pageobjects.basepage import BasePage
 from pageobjects.repairq.customergroups import groupdetails
 
@@ -18,31 +19,42 @@ class CustomerGroupsPage(BasePage):
 
     def __init__(self, driver):
         self.driver = driver
-        self.URL = 'https://cinq.repairq.io/customerGroups'
+        self.URL = root_url.repairq + '/customerGroups'
         self.wait = WebDriverWait(driver, 10)
         self.wait.until(EC.presence_of_element_located(CustomerGroupsPage.CUSTOMER_GROUP_PAGE))
 
-
     def navigate_to_page(self):
+        """
+            Navigate to the page of this pageObject
+
+            Returns:
+                None
+        """
         self.driver.get(self.URL)
         self.wait.until(EC.element_to_be_clickable(CustomerGroupsPage.CUSTOMER_GROUP_PAGE))
 
     def get_page_customers(self):
-        return self.driver.find_elements(*CustomerGroupsPage.CUSTOMER_GROUP)
+        """
+            Get every member of the customers groups table from the current page loaded on the
+            browser driver. The reference is lost if the page is changed.
 
-    def search_for_customer(self, name):
-        customers_list = self.get_customers()
-        return next((customer for customer in customers_list if customer.get('name') == name), {'name': None, 'parent':None })
+            Args:
+                None
+
+            Returns:
+                An list with a reference for each element
+        """
+        return self.driver.find_elements(*CustomerGroupsPage.CUSTOMER_GROUP)
 
     def get_customers(self):
         """
-            Get element name from Customer Group list
+            Return a list of libraries where each element contains one customer group with 'name', parent', 'active' and 'link'
 
             Args:
-                element: Customer element from the customer group list.
+                None
 
             Returns:
-                innerHTML from the name tag of the selected elemenet
+                A list of libraries
         """
         self.navigate_to_page()
         customer_list=[]
@@ -59,42 +71,78 @@ class CustomerGroupsPage(BasePage):
         self.navigate_to_page()
         return customer_list
     
-    def get_name(self, element):
+    def search_for_customer(self, name):
         """
-            Get element name from Customer Group list
+            Search for a Customer group by it's name on the customer groups page
 
             Args:
-                element: Customer element from the customer group list.
+                name: Name of the customer group
 
             Returns:
-                innerHTML from the name tag of the selected elemenet
+                A python library with the customer group if it is found and a library populated with 'None' otherwise
+        """
+        customers_list = self.get_customers()
+        return next((customer for customer in customers_list if customer.get('name') == name), {'name': None, 'parent':None, 'active': None, 'link': None })
+
+    def get_name(self, element):
+        """
+            Get element name from Customer Group element
+
+            Args:
+                element: Customer web element from the customer group list.
+
+            Returns:
+                A string with innerHTML from the name tag of the selected elemenet
         """
         return element.find_elements_by_class_name("wrap-text")[0].get_attribute("innerHTML").strip()
 
     def get_parent(self, element):
         """
-            Get the name of the element parent  from Customer Group list
+            Get the name of the element parent  from Customer Group element
             
             Args:
-                element: Customer element from the customer group list.
+                element: Customer web element from the customer group list.
 
             Returns:
-                innerHTML from the parent tag of the selected elemenet
+                A string with innerHTML from the parent tag of the selected elemenet
         """
         return element.find_elements_by_class_name("wrap-text")[2].get_attribute("innerHTML").strip()
 
     def get_active(self, element):
+        """
+            Get the active status of the element parent  from Customer Group element
+            
+            Args:
+                element: Customer web element from the customer group list.
+
+            Returns:
+                A string with the innerHTML from the parent tag of the selected elemenet
+        """
         return element.find_elements_by_class_name("wrap-text")[1].get_attribute("innerHTML").strip()
 
     def get_details_link(self, element):
+        """
+            Get the link to the destails page of the Customer Group element
+            
+            Args:
+                element: Customer web element from the customer group list.
+
+            Returns:
+                A string with the selected customer group 
+        """
         tag = element.find_elements_by_class_name("btn-action")[0]
         return tag.get_attribute("href")
 
-    def click_cgroup_details(self, element):
-        button = element.find_element(*CustomerGroupsPage.CGROUP_DETAILS_BTN)
-        button.click()
-
     def navigate_to_group_details(self, link) -> groupdetails.GroupDetailsPage:
+        """
+            Navigate to a customer group details page and return a new page objetect for the page
+            
+            Args:
+                link: A string with the URL of the customer group
+
+            Returns:
+                A page object for the customer group details page
+        """
         self.driver.get(link)
         group_details = groupdetails.GroupDetailsPage(self.driver)
         return group_details
@@ -104,7 +152,7 @@ class CustomerGroupsPage(BasePage):
             Verify if there is a next page of ContactsGroups
             
             Args:
-                driver: Reference to the browser driver
+                None
 
             Returns:
                 True if the next page button is enabled
@@ -118,27 +166,16 @@ class CustomerGroupsPage(BasePage):
         else: 
             return False
 
-    def count_customers(self) -> int:
+    def count_children(self, element_name, customers):
         """
-            Count of every customer shown in the Customer Groups page
+            Get the link to the destails page of the Customer Group element
             
             Args:
-                driver: Reference to the browser driver
+                element: Customer web element from the customer group list.
 
             Returns:
-                Total of elements counted from every page
-
-            Usage: count = count_customers(driver)
+                A string with the selected customer group 
         """
-        self.navigate_to_page()
-        count = 0
-        while True: 
-            count += len(self.driver.find_elements(*CustomerGroupsPage.CUSTOMER_GROUP))
-            if not CustomerGroupsPage.have_next_page(self):
-                break
-        return count
-
-    def count_children(self, element_name, customers):
         count = 0
         childlist = [customer for customer in customers if customer.get('parent') == element_name]
         count = len(childlist)
