@@ -17,7 +17,7 @@ class Test(unittest.TestCase):
 
     def test_login_unregistered_user(self):
         login_page = login.LoginPage(self.driver)
-        self.assertFalse(login_page.try_to_login('unregistereduser', 'pass', 0))
+        self.assertFalse(login_page.try_to_login('felipe', 'felipe', 0))
 
 
     # def test_login_not_allowed_group(self):
