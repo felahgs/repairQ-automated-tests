@@ -11,16 +11,16 @@ class HomePage(BasePage):
     NAV_BAR = (By.CLASS_NAME, 'rq-navbar-nav')
     GROUP_DROPDOWN = (By.XPATH, '//*[@id="app"]/div/nav/div/div/div[3]/ul/li[1]/label/ul')
 
+    def __init__(self, driver, org):
+        self.driver = driver
+        self.navbar = navbar.NavBar(self.driver)
+        self.org = org
+        self.URL = root_url.portal + self.org
+        self.wait = WebDriverWait(driver, 10)
+        self.wait.until(EC.visibility_of_element_located(HomePage.HOME_PAGE))
 
-def __init__(self, driver, org):
-    self.driver = driver
-    self.org = org
-    self.URL = root_url.portal + self.org
-    self.wait = WebDriverWait(driver, 10)
-    self.wait.until(EC.visibility_of_element_located(HomePage.HOME_PAGE))
-
-def navigate_to_page(self):
-    self.driver.get(self.URL)
-    self.wait.until(EC.element_to_be_clickable(HomePage.HOME_PAGE))
+    def navigate_to_page(self):
+        self.driver.get(self.URL)
+        self.wait.until(EC.element_to_be_clickable(HomePage.HOME_PAGE))
 
 

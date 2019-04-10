@@ -33,6 +33,7 @@ class CustomerGroupsPage(BasePage):
         self.driver.get(self.URL)
         self.wait.until(EC.element_to_be_clickable(CustomerGroupsPage.CUSTOMER_GROUP_PAGE))
 
+
     def get_page_customers(self):
         """
             Get every member of the customers groups table from the current page loaded on the
@@ -45,6 +46,7 @@ class CustomerGroupsPage(BasePage):
                 An list with a reference for each element
         """
         return self.driver.find_elements(*CustomerGroupsPage.CUSTOMER_GROUP)
+
 
     def get_customers(self):
         """
@@ -71,6 +73,7 @@ class CustomerGroupsPage(BasePage):
         self.navigate_to_page()
         return customer_list
     
+
     def search_for_customer(self, name):
         """
             Search for a Customer group by it's name on the customer groups page
@@ -84,6 +87,7 @@ class CustomerGroupsPage(BasePage):
         customers_list = self.get_customers()
         return next((customer for customer in customers_list if customer.get('name') == name), {'name': None, 'parent':None, 'active': None, 'link': None })
 
+
     def get_name(self, element):
         """
             Get element name from Customer Group element
@@ -95,6 +99,7 @@ class CustomerGroupsPage(BasePage):
                 A string with innerHTML from the name tag of the selected elemenet
         """
         return element.find_elements_by_class_name("wrap-text")[0].get_attribute("innerHTML").strip()
+
 
     def get_parent(self, element):
         """
@@ -108,6 +113,7 @@ class CustomerGroupsPage(BasePage):
         """
         return element.find_elements_by_class_name("wrap-text")[2].get_attribute("innerHTML").strip()
 
+
     def get_active(self, element):
         """
             Get the active status of the element parent  from Customer Group element
@@ -119,6 +125,7 @@ class CustomerGroupsPage(BasePage):
                 A string with the innerHTML from the parent tag of the selected elemenet
         """
         return element.find_elements_by_class_name("wrap-text")[1].get_attribute("innerHTML").strip()
+
 
     def get_details_link(self, element):
         """
@@ -133,6 +140,7 @@ class CustomerGroupsPage(BasePage):
         tag = element.find_elements_by_class_name("btn-action")[0]
         return tag.get_attribute("href")
 
+
     def navigate_to_group_details(self, link) -> groupdetails.GroupDetailsPage:
         """
             Navigate to a customer group details page and return a new page objetect for the page
@@ -146,6 +154,7 @@ class CustomerGroupsPage(BasePage):
         self.driver.get(link)
         group_details = groupdetails.GroupDetailsPage(self.driver)
         return group_details
+
 
     def have_next_page(self):
         """
@@ -165,6 +174,7 @@ class CustomerGroupsPage(BasePage):
             return True
         else: 
             return False
+
 
     def count_children(self, element_name, customers):
         """

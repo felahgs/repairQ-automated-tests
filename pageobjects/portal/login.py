@@ -19,10 +19,9 @@ class LoginPage(BasePage):
     def __init__(self, driver, org):
         self.driver = driver
         self.org = org
-        self.URL = root_url.portal + self.org + '/login'
+        self.URL = root_url.portal + '/' + self.org + '/login'
         self.wait = WebDriverWait(driver, 10)
-        self.wait.until(EC.element_to_be_clickable(LoginPage.USER_NAME))
-
+        # self.wait.until(EC.element_to_be_clickable(LoginPage.USER_NAME))
 
     def navigate_to_page(self):
         self.driver.get(self.URL)
@@ -36,26 +35,34 @@ class LoginPage(BasePage):
         elem = self.driver.find_element(*LoginPage.PASSWORD)
         elem.send_keys(password)
 
-    def select_group(self, group_index: int):
+    def select_group_by_index(self, group_index: int):
         select = Select(self.driver.find_element(*LoginPage.GROUP))
         select.select_by_index(group_index)
 
+    def select_group_by_name(self, group_name: str):
+        select = Select(self.driver.find_element(*LoginPage.GROUP))
+        select.select_by_visible_text(group_name)
 
-    def try_to_login (self, username: str, password: str, group_index: int):
+    def group_list_itens(self):
+        select = self.driver.find_element(*LoginPage.GROUP)
+        opts = select.find_elements(By.TAG_NAME, 'option')
+        return [opt.get_attribute('innerHTML') for opt in opts if opt.get_attribute('value') is not '' ]
+
+    def try_to_login (self, username: str, password: str, group_name: str):
         """
             Login to the repairQ page
 
             Args:
                 user: RepairQ user's login
                 password: RepairQ user's password
-                group_index: Index of the group to login
+                group_name: Name of the group to login
                 
             Returns:
                 True if login is successfull and False otherwise
         """
         LoginPage.set_username(self, username)
         LoginPage.set_password(self, password)
-        LoginPage.select_group(self, group_index)
+        LoginPage.select_group_by_name(self, group_name)
         btn = self.driver.find_element(*LoginPage.LOGIN_BTN)
         btn.click()
 
